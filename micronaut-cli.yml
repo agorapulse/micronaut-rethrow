@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: micronaut.rethrow
+---
+testFramework: spock
+sourceLanguage: java

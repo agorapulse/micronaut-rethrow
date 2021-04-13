@@ -1,0 +1,6 @@
+
+[[_introduction]]
+= Introduction
+
+Simple around advice which catches errors of given type and rethrows them
+as another type.

@@ -1,69 +1,11 @@
 # Micronaut Rethrow
 
-Simple around advice which catches errors of given type and rethrows them
-as another type.
+[![Build Status](https://github.com/agorapulse/micronaut-rethrow/workflows/Check/badge.svg)](https://github.com/agorapulse/micronaut-rethrow/actions)
+[![Download](https://api.bintray.com/packages/agorapulse/libs/micronaut-rethrow/images/download.svg)](https://bintray.com/agorapulse/libs/micronaut-rethrow/_latestVersion)
+[![Coverage Status](https://coveralls.io/repos/github/agorapulse/micronaut-rethrow/badge.svg?branch=master)](https://coveralls.io/github/agorapulse/micronaut-rethrow?branch=master)
 
-## Installation
+Micronaut Rethrow Library
 
-```
-repositories {
-    jcenter()
-}
+See [Full Documentation][DOCS]
 
-dependencies {
-    compile 'com.agorapulse:micronaut-rethrow:0.1.0'
-}
-```
-
-## Usage
-
-Annotate a service method with the `@Rethrow` annotation to wrap the exceptions thrown inside the method
-into a different one.
-
-```java
-@Singleton
-public class MyService {
-
-    @Rethrow(
-        // rethrow exceptions as IllegalStateException
-        as = IllegalStateException.class,
-        // optional message
-        message = "Something wrong happened",
-        // optional filter
-        only = IllegalArgumentException.class
-    )
-    void doSomeWork() {
-        // throws IllegalArgumentException
-    }
-    
-    // you can declare a function which does the conversion for you
-    // other annotations's properties are ingored in that case
-    @Rethrow(RethrowFuction.class)
-    void doOtherWork() {
-        // throws IllegalArgumentException
-    }
-
-}
-
-public class RethrowFunction implements Function<Throwable, RuntimeException> {
-    
-    public RuntimeException apply(Throwable th) {
-        return new IllegalStateException("Rethrown using function", th);
-    }
-
-}
-```
-
-If you are using Groovy code you can use `Closure` to declare the function:
-
-```groovy
-@Singleton
-class OtherService {
-
-    @Rethrow({ new IllegalStateException(it)})
-    void doSomething() {
-        // exceptional code
-    } 
-
-} 
-```
+[DOCS]: https://agorapulse.github.io/micronaut-rethrow

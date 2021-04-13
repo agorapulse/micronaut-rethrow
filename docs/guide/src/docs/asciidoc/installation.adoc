@@ -1,0 +1,14 @@
+
+[[_installation_]]
+= Installation
+
+[source]
+----
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implemenation 'com.agorapulse:micronaut-rethrow:{project-version}'
+}
+----

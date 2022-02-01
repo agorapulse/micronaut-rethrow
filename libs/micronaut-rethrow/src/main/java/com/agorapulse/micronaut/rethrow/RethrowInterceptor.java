@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2019-2021 Agorapulse.
+ * Copyright 2019-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ public class RethrowInterceptor implements MethodInterceptor<Object, Object> {
     private static final RethrowAsRuntimeException DEFAULT_CONVERTER  = new RethrowAsRuntimeException();
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         try {
             return context.proceed();
@@ -41,7 +42,7 @@ public class RethrowInterceptor implements MethodInterceptor<Object, Object> {
 
             Class<? extends Throwable>[] only = (Class<? extends Throwable>[]) annotation.get("only", Class[].class).orElse(new Class[0]);
 
-            if (Arrays.stream(only).noneMatch(type -> type.isAssignableFrom(error.getClass()))) {
+            if (only.length > 0 && only[0] != null && Arrays.stream(only).noneMatch(type -> type.isAssignableFrom(error.getClass()))) {
                 throw error;
             }
 

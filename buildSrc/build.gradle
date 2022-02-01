@@ -15,16 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.agorapulse.micronaut.rethrow;
+plugins {
+    id 'groovy-gradle-plugin'
+    id 'groovy'
+}
 
-import javax.inject.Singleton;
+repositories {
+    mavenCentral()
+    maven { url 'https://plugins.gradle.org/m2/' }
+}
 
-@Singleton
-@Rethrow(as = IllegalStateException.class)
-public class RethrowingJavaService {
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
 
-    void rethrowSomethingDeclaredOnClass() {
-        throw new UnsupportedOperationException("not implemented");
-    }
-
+    compile 'io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE'
+    compile 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
 }

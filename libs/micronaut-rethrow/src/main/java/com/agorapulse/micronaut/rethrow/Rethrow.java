@@ -44,6 +44,15 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Rethrow {
 
     /**
+     * This position moves the {@link Rethrow} annotation around {@link io.micronaut.retry.annotation.Retryable} interceptor.
+     *
+     * If {@link io.micronaut.retry.annotation.Retryable} and {@link Rethrow} is used on the same method then then
+     * rethrowin the exception will happen after the last attempt from the {@link io.micronaut.retry.annotation.Retryable}
+     * annotation.
+     */
+    int RETHROW_POSITION = -200;
+
+    /**
      * @return Function or closure which coverts the thrown exception to new one. New exception must extend {@link RuntimeException}
      */
     Class<? extends Function<? extends Throwable, ? extends RuntimeException>> value() default RethrowAsRuntimeException.class;

@@ -33,6 +33,11 @@ public class RethrowInterceptor implements MethodInterceptor<Object, Object> {
     private static final RethrowAsRuntimeException DEFAULT_CONVERTER  = new RethrowAsRuntimeException();
 
     @Override
+    public int getOrder() {
+        return Rethrow.RETHROW_POSITION;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         try {

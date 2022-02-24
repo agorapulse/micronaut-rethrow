@@ -33,6 +33,9 @@ class RethrowInterceptorSpec extends Specification {
     @Inject
     RethrowingJavaService rethrowingJavaService
 
+    @Inject
+    RetryableService retryableService
+
     void 'simple test'() {
         when:
             rethrowingService.simpleRethrow()
@@ -113,6 +116,16 @@ class RethrowInterceptorSpec extends Specification {
             rethrowingService.rethrowOnly()
         then:
             thrown(UnsupportedOperationException)
+    }
+
+    void 'rethrow and retryable'() {
+        when:
+            retryableService.retryOnException()
+
+        then:
+            thrown(IllegalStateException)
+
+            retryableService.counter == 4
     }
 
 }

@@ -17,7 +17,7 @@
  */
 package com.agorapulse.micronaut.rethrow;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @Rethrow(as = IllegalStateException.class)

@@ -19,7 +19,7 @@ package com.agorapulse.micronaut.rethrow;
 
 import io.micronaut.retry.annotation.Retryable;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class RetryableService {

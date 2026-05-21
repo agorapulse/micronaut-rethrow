@@ -44,14 +44,15 @@ public class RethrowInterceptor implements MethodInterceptor<Object, Object> {
             return context.proceed();
         } catch (Throwable error) {
             AnnotationValue<Rethrow> annotation = context.getAnnotation(Rethrow.class);
+            Rethrow rethrow = readAnnotation(context);
 
-            Class<? extends Throwable>[] only = (Class<? extends Throwable>[]) annotation.get("only", Class[].class).orElse(new Class[0]);
+            Class<? extends Throwable>[] only = rethrow.only();
 
             if (only.length > 0 && only[0] != null && Arrays.stream(only).noneMatch(type -> type.isAssignableFrom(error.getClass()))) {
                 throw error;
             }
 
-            Class<? extends Function<? extends Throwable, ? extends RuntimeException>> value = readClosureAwareValue(context);
+            Class<? extends Function<? extends Throwable, ? extends RuntimeException>> value = rethrow.value();
 
             if (value != null) {
                 if ("groovy.lang.Closure".equals(value.getSuperclass().getName())) {
@@ -93,17 +94,27 @@ public class RethrowInterceptor implements MethodInterceptor<Object, Object> {
     }
 
     /**
-     * Due the ongoing bug in Micronaut we need to use the old-fashioned way to get the annotation value.
-     * @link https://github.com/micronaut-projects/micronaut-core/issues/1022
+     * Reads the {@link Rethrow} annotation via reflection rather than via
+     * Micronaut's {@link AnnotationValue} accessor.
+     *
+     * Historical reason (https://github.com/micronaut-projects/micronaut-core/issues/1022):
+     * {@link AnnotationValue#get} does not preserve the Groovy {@code Closure}
+     * subtype for the {@code value} attribute.
+     *
+     * Reason added in Micronaut 5: {@link AnnotationValue#get} now also drops the
+     * user-supplied {@code Class[]} value for the {@code only} attribute, returning
+     * an empty array (or the {@code Throwable.class} default) instead of the
+     * actual classes the annotation declares — breaking the
+     * {@code @Rethrow(only = ...)} filter.
      */
-    private Class<? extends Function<? extends Throwable, ? extends RuntimeException>> readClosureAwareValue(MethodInvocationContext<Object, Object> context) {
+    private Rethrow readAnnotation(MethodInvocationContext<Object, Object> context) {
         Rethrow rethrow = context.getTargetMethod().getAnnotation(Rethrow.class);
 
         if (rethrow == null) {
             rethrow = context.getTargetMethod().getDeclaringClass().getAnnotation(Rethrow.class);
         }
 
-        return rethrow.value();
+        return rethrow;
     }
 
 }
